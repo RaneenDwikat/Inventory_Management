@@ -1,0 +1,87 @@
+ {% extends 'base.html' %}
+
+{% block title%} Location {% endblock%}
+{% block body %}
+
+<div class="jumbotron p-3">
+    <div class="well text-center"> <h1 > Locations</h1></div>
+</div>
+   <div class="jumbotron p-3">
+    <h2><button type='button' data-toggle="modal" data-target="#addLocation" class="btn btn-secondary"> Add new Location</button> </h2>     
+</div>
+{% with messages = get_flashed_messages()%}
+{% if messages %}
+{% for message in messages%}
+<div class="alert alert-success alert-dismissable" role="alert">
+    <button type='button' class='close' data-dismiss='alert' aria-label='close'><span aria-hidden="true">x</span></button>
+    {{message}}
+</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+<div class="container">
+  <table class="table table-sm">
+      <thead><th>Location ID</th><th> Action</th> </thead>
+      {%for location in locations%}
+      <tr><td>{{location.location_id}}</td>
+          <td><a href="/updateLocation/{{location.location_id}}" class="btn btn-secondary btn-xs" data-toggle="modal" data-target="#editLocation{{location.location_id}}">Edit</a></tr>      
+<!-- Modal -->
+<div class="modal" id="editLocation{{location.location_id}}">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal header -->
+        <div class="modal-header">
+          <h5 class="modal-title">edit Location</h5>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <!-- Form -->
+          <form id="edit" method="POST" action="{{url_for('updateLocation')}}">
+            <!-- Form fields -->
+            <div class="form-group">
+              <label for="location_id">Location Id</label>
+              <input type="text" class="form-control" id="location_id" name="location_id" required='1' value='{{location.location_id}}'>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">edit</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+  </table>
+
+<!-- Modal -->
+<div class="modal" id="addLocation">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <!-- Modal header -->
+      <div class="modal-header">
+        <h5 class="modal-title">Add a New Location</h5>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <!-- Form -->
+        <form id="add" method="POST" action="{{url_for("addLocation")}}">
+          <!-- Form fields -->
+          <div class="form-group">
+            <label for="location_id">Location Id</label>
+            <input type="text" class="form-control" name="location_id" id="location_id" required='1'>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Add</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+  {% endblock %}
+
+</div>

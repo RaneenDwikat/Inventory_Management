@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+
+{% block title%} Products Movement {% endblock%}
+{% block body %}
+
+<div class="jumbotron p-3">
+    <div class="well text-center"> <h1 > Products Movement</h1></div>
+</div>
+   <div class="jumbotron p-3">
+    <h2><button type='button' data-toggle="modal" data-target="#addMovement" class="btn btn-secondary"> Add new Product Movement</button> </h2>     
+</div>
+{% with messages = get_flashed_messages()%}
+{% if messages %}
+{% for message in messages%}
+<div class="alert alert-success alert-dismissable" role="alert">
+    <button type='button' class='close' data-dismiss='alert' aria-label='close'><span aria-hidden="true">x</span></button>
+    {{message}}
+</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+<div class="container">
+  <table class="table table-sm">
+      <thead><th>Movement ID</th><th>Product ID</th><th>From Location</th><th>To Location</th><th>Quantity</th><th>timestamp</th><th> Action</th> </thead>
+      {%for movement in movements%}
+      <tr><td>{{movement.movement_id}}</td>
+        <td>{{movement.productId}}</td><td>{{movement.from_location}}</td><td>{{movement.to_location}}</td>
+        <td>{{movement.qty}}</td><td>{{movement.timestamp}}</td>
+          <td><a href="/updateMovement/{{movement.movement_id}}" class="btn btn-secondary btn-xs" data-toggle="modal" data-target="#editMovement{{movement.movement_id}}">Edit</a></tr>      
+<!-- Modal -->
+<div class="modal" id="editMovement{{movement.movement_id}}">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal header -->
+        <div class="modal-header">
+          <h5 class="modal-title">edit Movement</h5>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <!-- Form -->
+          <form id="edit" method="POST" action="{{url_for('updateMovement')}}">
+            <!-- Form fields -->
+            <div class="form-group">
+            <label for="productId">Product Id</label>
+            <select style='width:100%' id="productId" name="productId">
+              {% for product in products%}
+              {% if movement.productId == product.product_id %}
+              <option value="{{product.product_id}}" selected>{{product.product_id}}</option>
+                {% else %}
+                <option value="{{product.product_id}}">{{product.product_id}}</option>
+                {%endif%} 
+              {%endfor%}              
+            </select>
+          </div>
+            <div class="form-group">
+              <label for="from_location">from location</label>
+              <select style='width:100%' id="from_location" name="from_location" >
+                <option value="" >    </option>
+                {% for location in locations%}
+                {% if movement.from_location == location.location_id %}
+                <option value="{{location.location_id}}" selected>{{location.location_id}}</option>
+                  {% else %}
+                  <option value="{{location.location_id}}" >{{location.location_id}}</option>
+                  {%endif%}              
+                  {%endfor%}              
+              </select>              </div>
+              <div class="form-group">
+                <label for="to_location">to location</label>
+                <select style='width:100%' id="to_location" name="to_location"  >
+                  <option value="" >    </option>
+                  {% for location in locations%}
+                  {% if movement.to_location == location.location_id %}
+                  <option value="{{location.location_id}}" selected>{{location.location_id}}</option>
+                    {% else %}
+                    <option value="{{location.location_id}}" >{{location.location_id}}</option>
+                    {%endif%}                   {%endfor%}              
+                </select>               </div>
+              <div class="form-group">
+                <label for="qty">Quantity</label>
+                <input type="number" class="form-control" id="qty" name="qty"  required='1' value='{{movement.qty}}'>
+              </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">edit</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+  </table>
+
+<!-- Modal -->
+<div class="modal" id="addMovement">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <!-- Modal header -->
+      <div class="modal-header">
+        <h5 class="modal-title">Add a New Product Movement</h5>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <!-- Form -->
+        <form id="add" method="POST" action="{{url_for("addMovement")}}">
+          <!-- Form fields -->
+          <div class="form-group">
+            <label for="productId">Product Id</label>
+            <select style='width:100%' id="productId" name="productId" >
+              {% for product in products%}
+              <option value="{{product.product_id}}">{{product.product_id}}</option> 
+              {%endfor%}              
+            </select>
+          </div>
+            <div class="form-group">
+              <label for="from_location">from location</label>
+              <select style='width:100%' id="from_location" name="from_location">
+                <option value="" >    </option>
+                {% for location in locations%}
+                  <option value="{{location.location_id}}" >{{location.location_id}}</option>
+                  {%endfor%}              
+              </select>              </div>
+              <div class="form-group">
+                <label for="to_location">to location</label>
+                <select style='width:100%' id="to_location" name="to_location">
+                  <option value="" >    </option>
+                  {% for location in locations%}
+                    <option value="{{location.location_id}}" >{{location.location_id}}</option>
+                    {%endfor%}              
+                </select>
+                </div>
+            <div class="form-group">
+              <label for="qty">Quantity</label>
+              <input type="number" class="form-control" id="qty" name="qty"  required='1'>
+            </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Add</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+  {% endblock %}
+
+</div>

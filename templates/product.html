@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block title%} Product {% endblock%}
+{% block body %}
+
+<div class="jumbotron p-3">
+    <div class="well text-center"> <h1 > Products</h1></div>
+</div>
+   <div class="jumbotron p-3">
+    <h2><button type='button' data-toggle="modal" data-target="#addProduct" class="btn btn-secondary"> Add new Product</button> </h2>     
+</div>
+
+{% with messages = get_flashed_messages()%}
+{% if messages %}
+{% for message in messages%}
+<div class="alert alert-success alert-dismissable" role="alert">
+    <button type='button' class='close' data-dismiss='alert' aria-label='close'><span aria-hidden="true">x</span></button>
+    {{message}}
+</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+<div class="container">
+  <table class="table table-sm">
+      <thead><th>Product ID</th><th> Action</th> </thead>
+      {%for product in products%}
+      <tr><td>{{product.product_id}}</td>
+          <td><a href="/updateProduct/{{product.product_id}}" class="btn btn-secondary btn-xs" data-toggle="modal" data-target="#editProduct{{product.product_id}}">Edit</a></tr>      
+<!-- Modal -->
+<div class="modal" id="editProduct{{product.product_id}}">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal header -->
+        <div class="modal-header">
+          <h5 class="modal-title">edit Product</h5>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <!-- Form -->
+          <form id="edit" method="POST" action="{{url_for('updateProduct')}}">
+            <!-- Form fields -->
+            <div class="form-group">
+              <label for="product_id">Product Id</label>
+              <input type="hidden" id="product_id" name="product_id" required='1' value='{{product.product_id}}'>
+              <input type="text" class="form-control" id="new_product_id" name="new_product_id" required='1' value='{{product.product_id}}'>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">edit</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+  </table>
+
+<!-- Modal -->
+<div class="modal" id="addProduct">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <!-- Modal header -->
+      <div class="modal-header">
+        <h5 class="modal-title">Add a New Product</h5>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <!-- Form -->
+        <form id="add" method="POST" action="{{url_for("addProduct")}}">
+          <!-- Form fields -->
+          <div class="form-group">
+            <label for="product_id">Product Id</label>
+            <input type="text" class="form-control" name="product_id" id="product_id" required='1'>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Add</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+  {% endblock %}
+
+</div>
