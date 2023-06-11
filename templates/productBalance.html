@@ -20,10 +20,20 @@
 {% endwith %}
 <div class="container">
   <table class="table table-sm">
-      <thead><th>Product</th><th> Warehouse</th> <th> Qty</th></thead>
-      {%for key in result%}
-      <tr><td>{{key[0]}}</td><td>{{key[1]}}</td><td>{{key[2]}}</td>
-{%endfor%}  </table>
+      <thead><th>Warehouse</th>
+        {% for product in products%}
+        <th> {{product.product_id}}</th>
+        {%endfor%}
+        </thead>
+      {%for location in locations%}
+      <tr><td>{{location.location_id}}</td>
+        {%for key in result%}
+        {% if key[1] == location.location_id%}
+        <td>{{key[2]}} </td>
+        {%endif%}
+        {%endfor%}
+        {%endfor%}
+      </table>
   {% endblock %}
 
 </div>

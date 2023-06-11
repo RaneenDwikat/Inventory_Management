@@ -98,6 +98,8 @@ def productBalance():
                   result[2]=result[2]+movement.qty
               if movement.from_location != None and result[1]==movement.from_location:
                   result[2]=result[2]-movement.qty
-
-    return render_template('productBalance.html', result=results)
+    
+                  
+    print(results)
+    return render_template('productBalance.html', result=results,products=products,locations=locations)
 
